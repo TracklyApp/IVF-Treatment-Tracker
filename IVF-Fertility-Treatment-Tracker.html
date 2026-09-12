@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IVF Treatment Tracker & Planner</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<meta name="theme-color" content="#332b38" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="IVF Tracker" />
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+<script src="./pwa.js" defer></script>
+<style>
+:root{
+  --bg:#f6f4f8;--panel:#ffffff;--ink:#2f2935;--muted:#786f80;--line:#e7e0eb;
+  --accent:#846b91;--accent2:#b98fa7;--soft:#eee7f1;--soft2:#f7edf2;
+  --good:#4f7a68;--warn:#a56a45;--danger:#a04e5a;--shadow:0 12px 35px rgba(65,45,75,.08);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.app{min-height:100vh;display:grid;grid-template-columns:255px 1fr}.sidebar{position:sticky;top:0;height:100vh;padding:24px 18px;background:#332b38;color:#fff;overflow:auto}.brand{padding:0 8px 20px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:16px}.brand h1{font-size:18px;line-height:1.15;margin:0 0 7px}.brand p{font-size:12px;line-height:1.45;color:#cabfd0;margin:0}.mode-badge{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border-radius:999px;padding:7px 10px;background:rgba(255,255,255,.11);font-size:11px;color:#fff}.dot{width:7px;height:7px;border-radius:50%;background:#d8b6ca}.nav{display:grid;gap:5px}.nav button{width:100%;border:0;background:transparent;color:#dcd2e0;text-align:left;padding:10px 11px;border-radius:10px;font-size:13px}.nav button:hover,.nav button.active{background:rgba(255,255,255,.12);color:#fff}.side-bottom{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12)}.activate-btn{width:100%;border:0;border-radius:10px;background:#d7b7ca;color:#332b38;font-weight:700;padding:10px 12px}.main{min-width:0}.topbar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 26px;background:rgba(246,244,248,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}.cycle-box{display:flex;align-items:center;gap:10px;min-width:0}.cycle-box select{max-width:270px}.top-actions{display:flex;gap:8px}.content{padding:24px 26px 50px;max-width:1450px;margin:0 auto}.page{display:none}.page.active{display:block}.page-title{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}.page-title h2{margin:0;font-size:28px;letter-spacing:-.6px}.page-title p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}.grid{display:grid;gap:14px}.grid.cards{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:17px}.stat .label{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:700}.stat .value{font-size:25px;font-weight:800;margin-top:6px}.stat .sub{font-size:11px;color:var(--muted);margin-top:5px}.section-card{margin-top:14px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}.section-head h3{font-size:16px;margin:0}.section-head p{font-size:12px;color:var(--muted);margin:3px 0 0}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:9px 12px;font-weight:650;font-size:12px}.btn:hover{border-color:#cbbdd1}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.soft{background:var(--soft);border-color:var(--soft);color:#57495f}.btn.danger{color:var(--danger)}.btn.sm{padding:6px 8px;font-size:11px}.field{display:grid;gap:6px}.field label{font-size:11px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea,.topbar select{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:9px 10px;outline:none}.field textarea{min-height:82px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus,.topbar select:focus{border-color:#ae9ab8;box-shadow:0 0 0 3px rgba(132,107,145,.11)}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.form-grid .span2{grid-column:span 2}.form-grid .span4{grid-column:1/-1}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:750px}th,td{padding:10px 11px;border-bottom:1px solid var(--line);text-align:left;font-size:12px;vertical-align:top}th{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#faf9fb;position:sticky;top:0}tr:last-child td{border-bottom:0}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;background:var(--soft);color:#5f5067;font-size:10px;font-weight:750}.pill.good{background:#e9f2ed;color:var(--good)}.pill.warn{background:#f7eee7;color:var(--warn)}.pill.danger{background:#f6e9ec;color:var(--danger)}.empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:12px}.today-list{display:grid;gap:8px}.today-item{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:10px 11px}.today-item strong{font-size:12px}.today-item small{color:var(--muted)}.progress{height:9px;border-radius:99px;background:#eeeaf0;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px}.timeline{display:grid;gap:9px}.timeline-item{display:grid;grid-template-columns:85px 1fr;gap:12px;align-items:start}.timeline-date{font-size:11px;color:var(--muted);padding-top:8px}.timeline-body{border-left:3px solid #d9c9df;background:#faf8fb;border-radius:0 12px 12px 0;padding:9px 12px}.timeline-body strong{font-size:12px}.timeline-body p{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.45}.notice{border:1px solid #e3d5dc;background:#fbf5f8;border-radius:14px;padding:13px 14px;font-size:12px;line-height:1.5;color:#655866}.notice strong{color:var(--ink)}.notice.danger{border-color:#ead0d5;background:#fff7f8}.kpi-row{display:flex;gap:12px;flex-wrap:wrap}.mini-kpi{min-width:110px;padding:10px;border-radius:11px;background:#faf8fb}.mini-kpi span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase}.mini-kpi strong{font-size:19px}.checkline{display:flex;align-items:center;gap:8px;font-size:12px}.checkline input{width:auto}.modal{position:fixed;inset:0;z-index:100;background:rgba(31,24,35,.56);display:grid;place-items:center;padding:18px}.modal-card{width:min(520px,100%);background:#fff;border-radius:18px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.2)}.modal-card h3{margin:0 0 8px}.modal-card p{font-size:12px;color:var(--muted);line-height:1.5}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.toast{position:fixed;right:20px;bottom:20px;z-index:200;max-width:340px;background:#332b38;color:#fff;border-radius:12px;padding:11px 13px;box-shadow:var(--shadow);font-size:12px;opacity:0;transform:translateY(12px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateY(0)}.chart{height:160px;display:flex;align-items:flex-end;gap:7px;padding:15px 4px 3px}.bar{flex:1;min-width:12px;border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#b99ec3,#856d91);position:relative}.bar:hover:after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);white-space:nowrap;background:#332b38;color:white;padding:4px 6px;border-radius:6px;font-size:9px}.hero{display:grid;grid-template-columns:1.35fr .65fr;gap:14px}.hero-main{background:linear-gradient(135deg,#fff 10%,#f5edf5);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}.hero-main .eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);font-weight:800}.hero-main h2{font-size:30px;margin:8px 0 6px;letter-spacing:-.8px}.hero-main p{max-width:680px;color:var(--muted);font-size:13px;line-height:1.55}.stage-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:18px}.stage{padding:9px 5px;text-align:center;border-radius:10px;background:#fff;border:1px solid var(--line);font-size:10px;color:var(--muted)}.stage.done{background:#eee7f1;color:#5a4961;border-color:#d8c9de;font-weight:700}.stage.current{background:var(--accent);border-color:var(--accent);color:white;font-weight:800}.guide-list{display:grid;gap:10px}.guide-item{border:1px solid var(--line);border-radius:12px;padding:12px}.guide-item strong{display:block;font-size:12px}.guide-item p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.5}.footer-note{margin-top:24px;color:var(--muted);font-size:10px;line-height:1.5;text-align:center}
+@media(max-width:1100px){.grid.cards{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:repeat(2,1fr)}.form-grid .span4{grid-column:1/-1}.hero{grid-template-columns:1fr}.stage-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.app{display:block}.sidebar{position:relative;height:auto;padding:16px}.brand{margin-bottom:10px;padding-bottom:12px}.nav{display:flex;overflow:auto;padding-bottom:4px}.nav button{white-space:nowrap;width:auto}.side-bottom{display:flex;gap:8px;align-items:center}.activate-btn{width:auto}.topbar{top:0;padding:11px 14px;align-items:flex-start}.cycle-box{flex:1;display:grid;gap:4px}.top-actions{display:none}.content{padding:18px 14px 35px}.page-title h2{font-size:23px}.grid.cards,.grid.two,.grid.three{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.form-grid .span2,.form-grid .span4{grid-column:auto}.stage-grid{grid-template-columns:repeat(2,1fr)}.hero-main h2{font-size:25px}.timeline-item{grid-template-columns:68px 1fr}}
+</style>
+<style>
+.pwa-panel{margin-top:16px;padding:12px;background:rgba(255,255,255,.08);border-radius:12px;display:grid;gap:9px}
+.pwa-panel p{margin:0;font-size:12px;line-height:1.5;color:#e0d6e5}
+.pwa-panel .btn{width:100%}
+#installHelp{width:min(560px,calc(100% - 28px));max-height:85vh;overflow:auto;border:1px solid var(--line);border-radius:18px;padding:22px;color:var(--ink);background:var(--panel)}
+#installHelp::backdrop{background:rgba(31,24,35,.56)}
+#installHelp h2{margin-top:0}#installHelp h3{font-size:16px}#installHelp p,#installHelp li{font-size:13px;line-height:1.6}
+@media(display-mode:standalone){body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}}
+@media print{.pwa-panel,#installHelp{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>IVF Treatment Tracker</h1>
+      <p>A calm, structured place for treatment details, appointments and cycle progress.</p>
+      <div class="mode-badge"><span class="dot"></span><span id="modeText">Demo Mode · 10 records</span></div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="active" data-page="dashboard">Dashboard</button>
+      <button data-page="cycle">Cycle Setup</button>
+      <button data-page="medications">Medications</button>
+      <button data-page="appointments">Appointments</button>
+      <button data-page="monitoring">Monitoring</button>
+      <button data-page="lab">Retrieval & Lab</button>
+      <button data-page="embryos">Embryos</button>
+      <button data-page="transfer">Transfer / FET</button>
+      <button data-page="tww">Two Week Wait</button>
+      <button data-page="symptoms">Symptoms</button>
+      <button data-page="costs">Costs</button>
+      <button data-page="notes">Notes</button>
+      <button data-page="backup">Backup</button>
+      <button data-page="guide">Guide & Safety</button>
+    </nav>
+    <div class="side-bottom">
+      <button class="activate-btn" id="openActivate">Unlock Full Version</button>
+    </div>
+    <div class="pwa-panel" aria-label="App installation and updates">
+      <button class="btn primary" id="installApp" type="button">Install App</button>
+      <p id="pwaStatus" role="status">Offline setup pending.</p>
+      <button class="btn" id="checkAppUpdate" type="button">Check for updates</button>
+      <p id="pwaUpdateStatus" role="status"></p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="cycle-box">
+        <strong style="font-size:12px">Active cycle</strong>
+        <select id="activeCycleSelect"></select>
+      </div>
+      <div class="top-actions">
+        <button class="btn" id="newCycleBtn">+ New Cycle</button>
+        <button class="btn soft" data-go="backup">Backup</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="page active" id="page-dashboard">
+        <div class="hero">
+          <div class="hero-main">
+            <div class="eyebrow">Your treatment at a glance</div>
+            <h2 id="heroTitle">Start your first cycle</h2>
+            <p id="heroSub">Set up a cycle to organize medications, monitoring, retrieval, embryos, transfer and test results in one place.</p>
+            <div class="stage-grid" id="stageGrid"></div>
+          </div>
+          <div class="card">
+            <div class="section-head"><div><h3>Next up</h3><p>Closest dated item</p></div></div>
+            <div id="nextUp" class="empty">No upcoming items yet.</div>
+          </div>
+        </div>
+        <div class="grid cards" style="margin-top:14px">
+          <div class="card stat"><div class="label">Cycle day</div><div class="value" id="statCycleDay">—</div><div class="sub" id="statCycleDaySub">Add a start date</div></div>
+          <div class="card stat"><div class="label">Medications</div><div class="value" id="statMeds">0</div><div class="sub">active medication plans</div></div>
+          <div class="card stat"><div class="label">Monitoring visits</div><div class="value" id="statMonitoring">0</div><div class="sub">saved scans / labs</div></div>
+          <div class="card stat"><div class="label">Embryos</div><div class="value" id="statEmbryos">0</div><div class="sub">tracked individually</div></div>
+        </div>
+        <div class="grid two">
+          <div class="card section-card"><div class="section-head"><div><h3>Today</h3><p>Medication plans and appointments</p></div></div><div id="todayList" class="today-list"></div></div>
+          <div class="card section-card"><div class="section-head"><div><h3>Cycle snapshot</h3><p>Latest lab totals</p></div></div><div class="kpi-row" id="labSnapshot"></div></div>
+        </div>
+        <div class="card section-card"><div class="section-head"><div><h3>Recent timeline</h3><p>Your latest saved treatment records</p></div></div><div id="timeline" class="timeline"></div></div>
+      </section>
+
+      <section class="page" id="page-cycle">
+        <div class="page-title"><div><h2>Cycle Setup</h2><p>Create separate records for IVF, IVF/ICSI, frozen transfer, IUI or egg freezing cycles.</p></div><button class="btn primary" id="saveCycleBtn">Save Cycle</button></div>
+        <div class="card"><div class="form-grid">
+          <div class="field span2"><label>Cycle name</label><input id="cycleName" placeholder="e.g. IVF Cycle 1" /></div>
+          <div class="field"><label>Treatment type</label><select id="cycleType"><option>IVF</option><option>IVF / ICSI</option><option>FET</option><option>IUI</option><option>Egg Freezing</option><option>Other</option></select></div>
+          <div class="field"><label>Status</label><select id="cycleStatus"><option>Planning</option><option>In progress</option><option>Completed</option><option>Paused</option><option>Cancelled</option></select></div>
+          <div class="field"><label>Cycle / protocol start</label><input type="date" id="cycleStart" /></div>
+          <div class="field"><label>Clinic</label><input id="cycleClinic" placeholder="Clinic name" /></div>
+          <div class="field"><label>Doctor / coordinator</label><input id="cycleDoctor" placeholder="Name" /></div>
+          <div class="field"><label>Clinic phone</label><input id="cyclePhone" placeholder="Phone" /></div>
+          <div class="field"><label>Expected retrieval</label><input type="date" id="cycleRetrievalExpected" /></div>
+          <div class="field"><label>Expected transfer</label><input type="date" id="cycleTransferExpected" /></div>
+          <div class="field"><label>Pregnancy test date</label><input type="date" id="cycleTestExpected" /></div>
+          <div class="field span4"><label>Protocol / clinic instructions</label><textarea id="cycleProtocol" placeholder="Record the protocol or instructions exactly as provided by your clinic."></textarea></div>
+          <div class="field span4"><label>Personal notes</label><textarea id="cycleNotes" placeholder="Anything you want to remember about this cycle."></textarea></div>
+        </div></div>
+        <div class="notice section-card"><strong>Important:</strong> This tracker is for organization only. Medication names, doses, timing and treatment decisions should always come from the fertility clinic or treating clinician.</div>
+      </section>
+
+      <section class="page" id="page-medications">
+        <div class="page-title"><div><h2>Medications</h2><p>Keep the clinic-provided schedule together without relying on memory.</p></div></div>
+        <div class="card"><div class="form-grid">
+          <div class="field span2"><label>Medication</label><input id="medName" placeholder="Medication name" /></div>
+          <div class="field"><label>Dose</label><input id="medDose" placeholder="e.g. 150" /></div>
+          <div class="field"><label>Unit</label><input id="medUnit" placeholder="IU / mg / mcg..." /></div>
+          <div class="field"><label>Route</label><select id="medRoute"><option>Injection</option><option>Oral</option><option>Vaginal</option><option>Nasal</option><option>Patch</option><option>Other</option></select></div>
+          <div class="field"><label>Start date</label><input type="date" id="medStart" /></div>
+          <div class="field"><label>End date</label><input type="date" id="medEnd" /></div>
+          <div class="field"><label>Time(s)</label><input id="medTimes" placeholder="e.g. 07:00, 19:00" /></div>
+          <div class="field span2"><label>Purpose / phase</label><input id="medPurpose" placeholder="As described by clinic" /></div>
+          <div class="field span2"><label>Notes</label><input id="medNotes" placeholder="Storage, clinic notes, etc." /></div>
+          <div class="span4"><button class="btn primary" id="addMedBtn">Add Medication</button></div>
+        </div></div>
+        <div class="card section-card"><div class="section-head"><div><h3>Medication plan</h3><p>Entries for the active cycle</p></div></div><div class="table-wrap"><table><thead><tr><th>Medication</th><th>Dose</th><th>Route</th><th>Dates</th><th>Time(s)</th><th>Phase</th><th></th></tr></thead><tbody id="medTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-appointments">
+        <div class="page-title"><div><h2>Appointments</h2><p>Scans, labs, consultations, retrieval, transfer and clinic calls.</p></div></div>
+        <div class="card"><div class="form-grid">
+          <div class="field"><label>Date</label><input type="date" id="apptDate" /></div><div class="field"><label>Time</label><input type="time" id="apptTime" /></div>
+          <div class="field span2"><label>Type</label><select id="apptType"><option>Monitoring ultrasound</option><option>Bloodwork</option><option>Consultation</option><option>Egg retrieval</option><option>Embryo transfer</option><option>Procedure</option><option>Phone / telehealth</option><option>Other</option></select></div>
+          <div class="field span2"><label>Location / clinician</label><input id="apptPlace" placeholder="Clinic, lab or clinician" /></div><div class="field span2"><label>Notes / questions</label><input id="apptNotes" placeholder="What to bring or ask" /></div>
+          <div class="span4"><button class="btn primary" id="addApptBtn">Add Appointment</button></div>
+        </div></div>
+        <div class="card section-card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Time</th><th>Type</th><th>Location</th><th>Notes</th><th></th></tr></thead><tbody id="apptTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-monitoring">
+        <div class="page-title"><div><h2>Monitoring</h2><p>Record clinic-reported ultrasound and bloodwork values over time.</p></div></div>
+        <div class="card"><div class="form-grid">
+          <div class="field"><label>Date</label><input type="date" id="monDate" /></div><div class="field"><label>Cycle day</label><input type="number" min="1" id="monDay" placeholder="e.g. 8" /></div>
+          <div class="field"><label>Endometrium (mm)</label><input type="number" step="0.1" id="monLining" /></div><div class="field"><label>Estradiol / E2</label><input id="monE2" placeholder="value + unit" /></div>
+          <div class="field"><label>Progesterone</label><input id="monP4" placeholder="value + unit" /></div><div class="field"><label>LH</label><input id="monLH" placeholder="value + unit" /></div>
+          <div class="field span2"><label>Right ovary follicles (mm)</label><input id="monRight" placeholder="e.g. 18, 16, 14, 12" /></div><div class="field span2"><label>Left ovary follicles (mm)</label><input id="monLeft" placeholder="e.g. 17, 15, 13" /></div>
+          <div class="field span4"><label>Clinic notes / plan changes</label><textarea id="monNotes" placeholder="Record what the clinic told you; do not self-adjust treatment based on this tracker."></textarea></div>
+          <div class="span4"><button class="btn primary" id="addMonBtn">Save Monitoring Visit</button></div>
+        </div></div>
+        <div class="grid two section-card"><div class="card"><div class="section-head"><div><h3>Follicle count trend</h3><p>Number of recorded follicles per visit</p></div></div><div id="follicleChart" class="chart"></div></div><div class="card"><div class="section-head"><div><h3>Lining trend</h3><p>Recorded endometrial thickness</p></div></div><div id="liningChart" class="chart"></div></div></div>
+        <div class="card section-card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Day</th><th>Lining</th><th>Right</th><th>Left</th><th>E2</th><th>P4</th><th>LH</th><th></th></tr></thead><tbody id="monTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-lab">
+        <div class="page-title"><div><h2>Retrieval & Lab</h2><p>Follow the funnel from retrieval through fertilization and blastocyst development.</p></div><button class="btn primary" id="saveLabBtn">Save Lab Summary</button></div>
+        <div class="card"><div class="form-grid">
+          <div class="field"><label>Retrieval date</label><input type="date" id="labRetrievalDate" /></div><div class="field"><label>Fertilization method</label><select id="labMethod"><option>IVF</option><option>ICSI</option><option>IVF + ICSI</option><option>Not applicable</option><option>Other</option></select></div>
+          <div class="field"><label>Eggs retrieved</label><input type="number" min="0" id="labRetrieved" /></div><div class="field"><label>Mature (MII)</label><input type="number" min="0" id="labMature" /></div>
+          <div class="field"><label>Normally fertilized</label><input type="number" min="0" id="labFertilized" /></div><div class="field"><label>Day 3 embryos</label><input type="number" min="0" id="labDay3" /></div>
+          <div class="field"><label>Blastocysts</label><input type="number" min="0" id="labBlast" /></div><div class="field"><label>Biopsied / PGT</label><input type="number" min="0" id="labBiopsied" /></div>
+          <div class="field"><label>Frozen</label><input type="number" min="0" id="labFrozen" /></div><div class="field"><label>Transferred fresh</label><input type="number" min="0" id="labFresh" /></div>
+          <div class="field span4"><label>Embryology notes</label><textarea id="labNotes" placeholder="Lab updates, fertilization report, development notes."></textarea></div>
+        </div></div>
+        <div class="card section-card"><div class="section-head"><div><h3>Lab funnel</h3><p>A visual summary only — not a prediction of outcome.</p></div></div><div class="kpi-row" id="labFunnel"></div></div>
+      </section>
+
+      <section class="page" id="page-embryos">
+        <div class="page-title"><div><h2>Embryos</h2><p>Track each embryo using the ID and grading information supplied by the embryology lab.</p></div></div>
+        <div class="card"><div class="form-grid">
+          <div class="field"><label>Embryo ID</label><input id="embId" placeholder="e.g. E1" /></div><div class="field"><label>Day / stage</label><select id="embStage"><option>Day 2</option><option>Day 3</option><option>Day 5 blastocyst</option><option>Day 6 blastocyst</option><option>Day 7 blastocyst</option><option>Other</option></select></div>
+          <div class="field"><label>Grade</label><input id="embGrade" placeholder="As reported by lab" /></div><div class="field"><label>PGT result</label><select id="embPgt"><option>Not tested</option><option>Pending</option><option>Euploid</option><option>Aneuploid</option><option>Mosaic</option><option>Inconclusive</option><option>Other</option></select></div>
+          <div class="field"><label>Status</label><select id="embStatus"><option>Developing</option><option>Frozen</option><option>Transferred</option><option>Biopsied</option><option>Not suitable for transfer / freeze</option><option>Other</option></select></div><div class="field"><label>Freeze / transfer date</label><input type="date" id="embDate" /></div>
+          <div class="field span2"><label>Notes</label><input id="embNotes" placeholder="Embryology notes" /></div><div class="span4"><button class="btn primary" id="addEmbBtn">Add Embryo</button></div>
+        </div></div>
+        <div class="card section-card"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Stage</th><th>Grade</th><th>PGT</th><th>Status</th><th>Date</th><th>Notes</th><th></th></tr></thead><tbody id="embTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-transfer">
+        <div class="page-title"><div><h2>Transfer / FET</h2><p>Keep the clinic's transfer details and follow-up plan together.</p></div><button class="btn primary" id="saveTransferBtn">Save Transfer</button></div>
+        <div class="card"><div class="form-grid">
+          <div class="field"><label>Transfer type</label><select id="trType"><option>Fresh transfer</option><option>Frozen embryo transfer (FET)</option><option>Not yet planned</option></select></div><div class="field"><label>Transfer date</label><input type="date" id="trDate" /></div>
+          <div class="field"><label>Embryo ID(s)</label><input id="trEmbryos" placeholder="e.g. E1" /></div><div class="field"><label>Embryo stage / grade</label><input id="trGrade" placeholder="As reported" /></div>
+          <div class="field"><label>Lining (mm)</label><input type="number" step="0.1" id="trLining" /></div><div class="field"><label>Progesterone start</label><input type="date" id="trPStart" /></div>
+          <div class="field"><label>Pregnancy test date</label><input type="date" id="trTestDate" /></div><div class="field"><label>Clinic / clinician</label><input id="trClinician" /></div>
+          <div class="field span4"><label>Transfer notes / instructions</label><textarea id="trNotes" placeholder="Record instructions exactly as given by your clinic."></textarea></div>
+        </div></div>
+      </section>
+
+      <section class="page" id="page-tww">
+        <div class="page-title"><div><h2>Two Week Wait</h2><p>Track testing and symptoms without trying to diagnose the outcome from symptoms.</p></div></div>
+        <div class="grid two">
+          <div class="card"><div class="section-head"><div><h3>Beta hCG results</h3><p>Enter lab results exactly as reported</p></div></div><div class="form-grid">
+            <div class="field"><label>Date</label><input type="date" id="betaDate" /></div><div class="field"><label>Result</label><input id="betaValue" placeholder="value + unit" /></div><div class="field span2"><label>Clinic note</label><input id="betaNote" placeholder="Follow-up requested by clinic" /></div><div class="span4"><button class="btn primary" id="addBetaBtn">Add Result</button></div>
+          </div><div style="margin-top:12px" class="table-wrap"><table style="min-width:430px"><thead><tr><th>Date</th><th>Result</th><th>Note</th><th></th></tr></thead><tbody id="betaTable"></tbody></table></div></div>
+          <div class="card"><div class="section-head"><div><h3>Wait snapshot</h3><p>Dates from your transfer plan</p></div></div><div id="twwSnapshot"></div></div>
+        </div>
+        <div class="notice section-card"><strong>Reminder:</strong> symptoms during this period can overlap with medication effects and normal cycle symptoms. Use the tracker to document what you notice, not to determine whether treatment worked.</div>
+      </section>
+
+      <section class="page" id="page-symptoms">
+        <div class="page-title"><div><h2>Symptoms</h2><p>A simple log you can reference when speaking with your clinic.</p></div></div>
+        <div class="card"><div class="form-grid">
+          <div class="field"><label>Date</label><input type="date" id="symDate" /></div><div class="field"><label>Symptom</label><input id="symName" placeholder="e.g. bloating, headache" /></div><div class="field"><label>Severity</label><select id="symSeverity"><option>Mild</option><option>Moderate</option><option>Severe</option></select></div><div class="field"><label>Phase</label><input id="symPhase" placeholder="Stimulation / post retrieval / FET..." /></div>
+          <div class="field span4"><label>Notes</label><textarea id="symNotes" placeholder="What you noticed and any advice given by your clinic."></textarea></div><div class="span4"><button class="btn primary" id="addSymBtn">Add Symptom</button></div>
+        </div></div>
+        <div class="card section-card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Symptom</th><th>Severity</th><th>Phase</th><th>Notes</th><th></th></tr></thead><tbody id="symTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-costs">
+        <div class="page-title"><div><h2>Costs</h2><p>Track treatment-related spending, insurance contributions and out-of-pocket totals.</p></div></div>
+        <div class="grid cards"><div class="card stat"><div class="label">Total billed</div><div class="value" id="costTotal">0</div></div><div class="card stat"><div class="label">Insurance / reimbursement</div><div class="value" id="costCovered">0</div></div><div class="card stat"><div class="label">Out of pocket</div><div class="value" id="costOop">0</div></div><div class="card stat"><div class="label">Currency</div><div class="value" style="font-size:19px" id="costCurrencyDisplay">USD</div></div></div>
+        <div class="card section-card"><div class="form-grid">
+          <div class="field"><label>Date</label><input type="date" id="costDate" /></div><div class="field"><label>Category</label><select id="costCategory"><option>Clinic / procedure</option><option>Medication</option><option>Lab / testing</option><option>Ultrasound / monitoring</option><option>Storage</option><option>Travel</option><option>Other</option></select></div>
+          <div class="field"><label>Total amount</label><input type="number" step="0.01" id="costAmount" /></div><div class="field"><label>Covered / reimbursed</label><input type="number" step="0.01" id="costCoveredInput" /></div>
+          <div class="field"><label>Currency</label><select id="costCurrency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>RON</option><option>Other</option></select></div><div class="field span2"><label>Description</label><input id="costDesc" placeholder="What was this for?" /></div><div class="field"><label>Status</label><select id="costStatus"><option>Paid</option><option>Pending</option><option>Reimbursed</option><option>Partially reimbursed</option></select></div>
+          <div class="span4"><button class="btn primary" id="addCostBtn">Add Cost</button></div>
+        </div></div>
+        <div class="card section-card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Total</th><th>Covered</th><th>Out of pocket</th><th>Status</th><th></th></tr></thead><tbody id="costTable"></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="page-notes">
+        <div class="page-title"><div><h2>Notes & Questions</h2><p>Capture questions before appointments and keep answers in the same cycle record.</p></div></div>
+        <div class="card"><div class="form-grid"><div class="field"><label>Date</label><input type="date" id="noteDate" /></div><div class="field"><label>Type</label><select id="noteType"><option>Question for clinic</option><option>Clinic answer</option><option>Personal note</option><option>Phone call</option><option>Decision / next step</option></select></div><div class="field span2"><label>Title</label><input id="noteTitle" /></div><div class="field span4"><label>Note</label><textarea id="noteBody"></textarea></div><div class="span4"><button class="btn primary" id="addNoteBtn">Add Note</button></div></div></div>
+        <div id="notesList" class="grid two section-card"></div>
+      </section>
+
+      <section class="page" id="page-backup">
+        <div class="page-title"><div><h2>Backup & Restore</h2><p>Your data stays in this browser/device unless you export a backup file.</p></div></div>
+        <div class="grid two">
+          <div class="card"><div class="section-head"><div><h3>Export backup</h3><p>Save a JSON copy of all cycles and records.</p></div></div><p style="font-size:12px;color:var(--muted);line-height:1.55">Keep the backup somewhere safe. This app does not send your treatment data to a server.</p><button class="btn primary" id="exportBtn">Download Backup</button></div>
+          <div class="card"><div class="section-head"><div><h3>Restore backup</h3><p>Replace the current local data with a previous backup.</p></div></div><input type="file" id="restoreFile" accept="application/json,.json" /><div style="margin-top:10px"><button class="btn" id="restoreBtn">Restore File</button></div></div>
+        </div>
+        <div class="card section-card"><div class="section-head"><div><h3>Local data</h3><p>Maintenance tools</p></div></div><button class="btn danger" id="clearDataBtn">Clear All Local Data</button></div>
+      </section>
+
+      <section class="page" id="page-guide">
+        <div class="page-title"><div><h2>Guide & Safety</h2><p>What this app does — and what it deliberately does not do.</p></div></div>
+        <div class="grid two">
+          <div class="card"><div class="section-head"><div><h3>How to use it</h3></div></div><div class="guide-list">
+            <div class="guide-item"><strong>1. Create a cycle</strong><p>Add the treatment type, clinic, start date and key expected dates.</p></div>
+            <div class="guide-item"><strong>2. Copy clinic instructions</strong><p>Enter medication and appointment information exactly as provided by your fertility team.</p></div>
+            <div class="guide-item"><strong>3. Add monitoring results</strong><p>Save follicle measurements, lining and bloodwork after each clinic update.</p></div>
+            <div class="guide-item"><strong>4. Follow retrieval and embryos</strong><p>Use the lab summary for totals and the embryo tracker for individual IDs, grades and status.</p></div>
+            <div class="guide-item"><strong>5. Back up regularly</strong><p>Data is stored locally on the device/browser, so export a backup after meaningful updates.</p></div>
+          </div></div>
+          <div class="card"><div class="section-head"><div><h3>When symptoms need medical attention</h3><p>This section is informational, not diagnostic.</p></div></div>
+            <div class="notice danger"><strong>Contact your fertility clinic promptly</strong> if you are unwell or have concerning symptoms during treatment. Urgent warning symptoms described by major fertility/health authorities include significant abdominal pain or swelling, persistent vomiting, faintness, reduced urination, difficulty breathing, chest/upper-back pain, or other rapidly worsening symptoms.</div>
+            <p style="font-size:11px;color:var(--muted);line-height:1.55;margin:12px 0 0">For emergency symptoms, use your local emergency service. This app cannot assess symptom severity or replace your clinic's instructions.</p>
+          </div>
+        </div>
+        <div class="card section-card"><div class="section-head"><div><h3>Privacy</h3></div></div><p style="font-size:12px;color:var(--muted);line-height:1.6">The standalone app stores data in the browser's local storage. No account or cloud sync is required. Anyone with access to the same browser profile/device may be able to access the saved data, so use an appropriately secured device.</p></div>
+      </section>
+      <div class="footer-note">IVF Treatment Tracker & Planner · Organizational tool only · Not medical advice, diagnosis, treatment guidance, or a substitute for your fertility clinic.</div>
+    </div>
+  </main>
+</div>
+
+<div class="modal hidden" id="activateModal"><div class="modal-card"><h3>Unlock Full Version</h3><p>Demo mode lets you save up to 10 tracker records. Enter your activation code to unlock unlimited cycles and records on this browser.</p><div class="field"><label>Activation code</label><input id="activationCode" placeholder="XXXX-XXXX-XXXX" /></div><div class="modal-actions"><button class="btn" id="closeActivate">Cancel</button><button class="btn primary" id="activateBtn">Activate</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY='ivfTreatmentTracker_v1';
+  const LICENSE_KEY='ivfTreatmentTracker_full';
+  const ACTIVATION_CODE='IVF-7M4Q-K9PX';
+  const DEMO_LIMIT=10;
+  const todayISO=()=>new Date().toISOString().slice(0,10);
+  const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  const esc=s=>String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+  const $=id=>document.getElementById(id);
+  const num=v=>Number(v||0);
+  const fmtDate=v=>{if(!v)return '—';const d=new Date(v+'T12:00:00');return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});};
+  const daysBetween=(a,b)=>Math.floor((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000);
+  const arrays=['medications','appointments','monitoring','embryos','betas','symptoms','costs','notes'];
+  let full=localStorage.getItem(LICENSE_KEY)==='1';
+  let state=load();
+
+  function blankCycle(name='IVF Cycle 1'){
+    return {id:uid(),name,type:'IVF',status:'Planning',start:'',clinic:'',doctor:'',phone:'',retrievalExpected:'',transferExpected:'',testExpected:'',protocol:'',notes:'',
+      medications:[],appointments:[],monitoring:[],embryos:[],betas:[],symptoms:[],costs:[],notesList:[],
+      lab:{retrievalDate:'',method:'IVF',retrieved:'',mature:'',fertilized:'',day3:'',blast:'',biopsied:'',frozen:'',fresh:'',notes:''},
+      transfer:{type:'Not yet planned',date:'',embryos:'',grade:'',lining:'',pStart:'',testDate:'',clinician:'',notes:''}};
+  }
+  function defaultState(){const c=blankCycle();return {version:1,activeCycleId:c.id,cycles:[c]};}
+  function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return defaultState();const parsed=JSON.parse(raw);if(!parsed.cycles?.length)return defaultState();return parsed;}catch{return defaultState();}}
+  function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+  function cycle(){return state.cycles.find(c=>c.id===state.activeCycleId)||state.cycles[0];}
+  function recordCount(){return state.cycles.reduce((sum,c)=>sum+c.medications.length+c.appointments.length+c.monitoring.length+c.embryos.length+c.betas.length+c.symptoms.length+c.costs.length+c.notesList.length,0);}
+  function canAdd(){if(full)return true;if(recordCount()>=DEMO_LIMIT){toast('Demo limit reached. Unlock the full version for unlimited records.');openActivation();return false;}return true;}
+  function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2600);}
+  function openActivation(){$('activateModal').classList.remove('hidden');setTimeout(()=>$('activationCode').focus(),50);}
+  function setDefaultDates(){['apptDate','monDate','symDate','costDate','noteDate','betaDate'].forEach(id=>{if($(id)&&!$(id).value)$(id).value=todayISO();});}
+
+  function renderAll(){renderMode();renderCycleSelector();loadCycleForm();loadLabForm();loadTransferForm();renderDashboard();renderMeds();renderAppointments();renderMonitoring();renderEmbryos();renderBetas();renderSymptoms();renderCosts();renderNotes();renderTWWSnapshot();setDefaultDates();}
+  function renderMode(){$('modeText').textContent=full?'Full Version · Unlimited':`Demo Mode · ${Math.max(0,DEMO_LIMIT-recordCount())} records left`;$('openActivate').textContent=full?'Full Version Active':'Unlock Full Version';$('openActivate').disabled=full;}
+  function renderCycleSelector(){const sel=$('activeCycleSelect');sel.innerHTML=state.cycles.map(c=>`<option value="${esc(c.id)}" ${c.id===state.activeCycleId?'selected':''}>${esc(c.name||'Untitled Cycle')} · ${esc(c.type)}</option>`).join('');}
+  function loadCycleForm(){const c=cycle();if(!c)return;const map={cycleName:'name',cycleType:'type',cycleStatus:'status',cycleStart:'start',cycleClinic:'clinic',cycleDoctor:'doctor',cyclePhone:'phone',cycleRetrievalExpected:'retrievalExpected',cycleTransferExpected:'transferExpected',cycleTestExpected:'testExpected',cycleProtocol:'protocol',cycleNotes:'notes'};Object.entries(map).forEach(([id,k])=>$(id).value=c[k]??'');}
+  function saveCycleForm(){const c=cycle();const map={cycleName:'name',cycleType:'type',cycleStatus:'status',cycleStart:'start',cycleClinic:'clinic',cycleDoctor:'doctor',cyclePhone:'phone',cycleRetrievalExpected:'retrievalExpected',cycleTransferExpected:'transferExpected',cycleTestExpected:'testExpected',cycleProtocol:'protocol',cycleNotes:'notes'};Object.entries(map).forEach(([id,k])=>c[k]=$(id).value.trim());save();renderAll();toast('Cycle saved.');}
+
+  function stageIndex(c){if(c.betas.length)return 5;if(c.transfer.date)return 4;if(c.embryos.length||num(c.lab.blast)>0)return 3;if(c.lab.retrievalDate||num(c.lab.retrieved)>0)return 2;if(c.monitoring.length||c.medications.length)return 1;return 0;}
+  function renderDashboard(){const c=cycle();const idx=stageIndex(c);const stages=['Setup','Stimulation','Retrieval','Embryos','Transfer','Testing'];$('stageGrid').innerHTML=stages.map((s,i)=>`<div class="stage ${i<idx?'done':i===idx?'current':''}">${s}</div>`).join('');
+    $('heroTitle').textContent=c.name||'Untitled Cycle';$('heroSub').textContent=`${c.type} · ${c.status}${c.clinic?' · '+c.clinic:''}`;
+    if(c.start){const d=daysBetween(c.start,todayISO())+1;$('statCycleDay').textContent=d>0?d:'—';$('statCycleDaySub').textContent=`Started ${fmtDate(c.start)}`;}else{$('statCycleDay').textContent='—';$('statCycleDaySub').textContent='Add a start date';}
+    const activeMeds=c.medications.filter(m=>(!m.start||m.start<=todayISO())&&(!m.end||m.end>=todayISO()));$('statMeds').textContent=activeMeds.length;$('statMonitoring').textContent=c.monitoring.length;$('statEmbryos').textContent=c.embryos.length;
+    const todayItems=[];activeMeds.forEach(m=>todayItems.push(`<div class="today-item"><div><strong>${esc(m.name)}</strong><br><small>${esc([m.dose,m.unit,m.route,m.times].filter(Boolean).join(' · '))}</small></div><span class="pill">Medication</span></div>`));c.appointments.filter(a=>a.date===todayISO()).forEach(a=>todayItems.push(`<div class="today-item"><div><strong>${esc(a.type)}</strong><br><small>${esc([a.time,a.place].filter(Boolean).join(' · '))}</small></div><span class="pill good">Appointment</span></div>`));$('todayList').innerHTML=todayItems.join('')||'<div class="empty">Nothing dated for today.</div>';
+    const lab=c.lab;$('labSnapshot').innerHTML=[['Retrieved',lab.retrieved],['Mature',lab.mature],['Fertilized',lab.fertilized],['Blastocysts',lab.blast],['Frozen',lab.frozen]].map(([k,v])=>`<div class="mini-kpi"><span>${k}</span><strong>${esc(v||'0')}</strong></div>`).join('');
+    renderNextUp(c);renderTimeline(c);
+  }
+  function renderNextUp(c){const today=todayISO();const items=[];c.appointments.forEach(a=>{if(a.date>=today)items.push({date:a.date,title:a.type,sub:[a.time,a.place].filter(Boolean).join(' · ')});});[['Expected retrieval',c.retrievalExpected],['Expected transfer',c.transferExpected],['Pregnancy test',c.testExpected],['Transfer',c.transfer.date],['Pregnancy test',c.transfer.testDate]].forEach(([title,date])=>{if(date&&date>=today)items.push({date,title,sub:''});});items.sort((a,b)=>a.date.localeCompare(b.date));const x=items[0];$('nextUp').innerHTML=x?`<div><span class="pill">${fmtDate(x.date)}</span><h3 style="margin:10px 0 4px;font-size:17px">${esc(x.title)}</h3><div style="font-size:12px;color:var(--muted)">${esc(x.sub||'Saved in your cycle plan')}</div></div>`:'<div class="empty">No upcoming items yet.</div>';}
+  function renderTimeline(c){const items=[];c.monitoring.forEach(x=>items.push({date:x.date,title:'Monitoring',sub:`Lining ${x.lining||'—'} mm · ${parseFollicles(x.right).length+parseFollicles(x.left).length} follicles recorded`}));c.appointments.forEach(x=>items.push({date:x.date,title:x.type,sub:x.place||x.notes}));c.betas.forEach(x=>items.push({date:x.date,title:'Beta hCG result',sub:x.value}));c.symptoms.forEach(x=>items.push({date:x.date,title:`Symptom: ${x.name}`,sub:`${x.severity}${x.notes?' · '+x.notes:''}`}));if(c.lab.retrievalDate)items.push({date:c.lab.retrievalDate,title:'Egg retrieval',sub:`${c.lab.retrieved||0} eggs retrieved`});if(c.transfer.date)items.push({date:c.transfer.date,title:c.transfer.type,sub:c.transfer.embryos?`Embryo(s): ${c.transfer.embryos}`:''});items.sort((a,b)=>(b.date||'').localeCompare(a.date||''));$('timeline').innerHTML=items.slice(0,8).map(x=>`<div class="timeline-item"><div class="timeline-date">${fmtDate(x.date)}</div><div class="timeline-body"><strong>${esc(x.title)}</strong><p>${esc(x.sub||'')}</p></div></div>`).join('')||'<div class="empty">Your timeline will build as you add records.</div>';}
+
+  function addMed(){if(!canAdd())return;const c=cycle(),name=$('medName').value.trim();if(!name)return toast('Add a medication name.');c.medications.push({id:uid(),name,dose:$('medDose').value.trim(),unit:$('medUnit').value.trim(),route:$('medRoute').value,start:$('medStart').value,end:$('medEnd').value,times:$('medTimes').value.trim(),purpose:$('medPurpose').value.trim(),notes:$('medNotes').value.trim()});['medName','medDose','medUnit','medStart','medEnd','medTimes','medPurpose','medNotes'].forEach(id=>$(id).value='');save();renderAll();toast('Medication added.');}
+  function renderMeds(){const c=cycle();$('medTable').innerHTML=c.medications.map(m=>`<tr><td><strong>${esc(m.name)}</strong><br><small>${esc(m.notes||'')}</small></td><td>${esc([m.dose,m.unit].filter(Boolean).join(' '))}</td><td>${esc(m.route)}</td><td>${fmtDate(m.start)} → ${fmtDate(m.end)}</td><td>${esc(m.times||'—')}</td><td>${esc(m.purpose||'—')}</td><td><button class="btn sm danger" data-del="medications" data-id="${m.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No medication plans yet.</td></tr>';}
+
+  function addAppt(){if(!canAdd())return;if(!$('apptDate').value)return toast('Choose an appointment date.');const c=cycle();c.appointments.push({id:uid(),date:$('apptDate').value,time:$('apptTime').value,type:$('apptType').value,place:$('apptPlace').value.trim(),notes:$('apptNotes').value.trim()});$('apptTime').value='';$('apptPlace').value='';$('apptNotes').value='';save();renderAll();toast('Appointment added.');}
+  function renderAppointments(){const c=cycle();const rows=[...c.appointments].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));$('apptTable').innerHTML=rows.map(a=>`<tr><td>${fmtDate(a.date)}</td><td>${esc(a.time||'—')}</td><td>${esc(a.type)}</td><td>${esc(a.place||'—')}</td><td>${esc(a.notes||'—')}</td><td><button class="btn sm danger" data-del="appointments" data-id="${a.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No appointments yet.</td></tr>';}
+
+  function parseFollicles(s){return String(s||'').split(/[ ,;]+/).map(Number).filter(v=>Number.isFinite(v)&&v>0);}
+  function addMonitoring(){if(!canAdd())return;if(!$('monDate').value)return toast('Choose a monitoring date.');const c=cycle();c.monitoring.push({id:uid(),date:$('monDate').value,day:$('monDay').value,lining:$('monLining').value,e2:$('monE2').value.trim(),p4:$('monP4').value.trim(),lh:$('monLH').value.trim(),right:$('monRight').value.trim(),left:$('monLeft').value.trim(),notes:$('monNotes').value.trim()});['monDay','monLining','monE2','monP4','monLH','monRight','monLeft','monNotes'].forEach(id=>$(id).value='');save();renderAll();toast('Monitoring visit saved.');}
+  function renderMonitoring(){const c=cycle();const rows=[...c.monitoring].sort((a,b)=>a.date.localeCompare(b.date));$('monTable').innerHTML=rows.map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.day||'—')}</td><td>${esc(x.lining?x.lining+' mm':'—')}</td><td>${esc(x.right||'—')}</td><td>${esc(x.left||'—')}</td><td>${esc(x.e2||'—')}</td><td>${esc(x.p4||'—')}</td><td>${esc(x.lh||'—')}</td><td><button class="btn sm danger" data-del="monitoring" data-id="${x.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="9" class="empty">No monitoring visits yet.</td></tr>';renderBars('follicleChart',rows.map(x=>({label:fmtDate(x.date),value:parseFollicles(x.right).length+parseFollicles(x.left).length})));renderBars('liningChart',rows.map(x=>({label:fmtDate(x.date),value:num(x.lining)})));}
+  function renderBars(id,data){const el=$(id);if(!data.length){el.innerHTML='<div class="empty" style="width:100%">No data yet.</div>';return;}const max=Math.max(...data.map(x=>x.value),1);el.innerHTML=data.slice(-12).map(x=>`<div class="bar" style="height:${Math.max(5,(x.value/max)*135)}px" data-tip="${esc(x.label)} · ${esc(x.value)}"></div>`).join('');}
+
+  function loadLabForm(){const l=cycle().lab||{};const map={labRetrievalDate:'retrievalDate',labMethod:'method',labRetrieved:'retrieved',labMature:'mature',labFertilized:'fertilized',labDay3:'day3',labBlast:'blast',labBiopsied:'biopsied',labFrozen:'frozen',labFresh:'fresh',labNotes:'notes'};Object.entries(map).forEach(([id,k])=>$(id).value=l[k]??'');renderLabFunnel();}
+  function saveLab(){const l=cycle().lab;const map={labRetrievalDate:'retrievalDate',labMethod:'method',labRetrieved:'retrieved',labMature:'mature',labFertilized:'fertilized',labDay3:'day3',labBlast:'blast',labBiopsied:'biopsied',labFrozen:'frozen',labFresh:'fresh',labNotes:'notes'};Object.entries(map).forEach(([id,k])=>l[k]=$(id).value.trim());save();renderAll();toast('Lab summary saved.');}
+  function renderLabFunnel(){const l=cycle().lab;$('labFunnel').innerHTML=[['Retrieved',l.retrieved],['Mature',l.mature],['Fertilized',l.fertilized],['Day 3',l.day3],['Blastocysts',l.blast],['Biopsied',l.biopsied],['Frozen',l.frozen]].map(([k,v])=>`<div class="mini-kpi"><span>${k}</span><strong>${esc(v||'0')}</strong></div>`).join('');}
+
+  function addEmbryo(){if(!canAdd())return;const idv=$('embId').value.trim();if(!idv)return toast('Add an embryo ID.');const c=cycle();c.embryos.push({id:uid(),embryoId:idv,stage:$('embStage').value,grade:$('embGrade').value.trim(),pgt:$('embPgt').value,status:$('embStatus').value,date:$('embDate').value,notes:$('embNotes').value.trim()});['embId','embGrade','embDate','embNotes'].forEach(id=>$(id).value='');save();renderAll();toast('Embryo added.');}
+  function renderEmbryos(){const c=cycle();$('embTable').innerHTML=c.embryos.map(e=>`<tr><td><strong>${esc(e.embryoId)}</strong></td><td>${esc(e.stage)}</td><td>${esc(e.grade||'—')}</td><td><span class="pill ${e.pgt==='Euploid'?'good':e.pgt==='Aneuploid'?'danger':''}">${esc(e.pgt)}</span></td><td>${esc(e.status)}</td><td>${fmtDate(e.date)}</td><td>${esc(e.notes||'—')}</td><td><button class="btn sm danger" data-del="embryos" data-id="${e.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">No embryos tracked yet.</td></tr>';}
+
+  function loadTransferForm(){const t=cycle().transfer||{};const map={trType:'type',trDate:'date',trEmbryos:'embryos',trGrade:'grade',trLining:'lining',trPStart:'pStart',trTestDate:'testDate',trClinician:'clinician',trNotes:'notes'};Object.entries(map).forEach(([id,k])=>$(id).value=t[k]??'');}
+  function saveTransfer(){const t=cycle().transfer;const map={trType:'type',trDate:'date',trEmbryos:'embryos',trGrade:'grade',trLining:'lining',trPStart:'pStart',trTestDate:'testDate',trClinician:'clinician',trNotes:'notes'};Object.entries(map).forEach(([id,k])=>t[k]=$(id).value.trim());save();renderAll();toast('Transfer details saved.');}
+
+  function addBeta(){if(!canAdd())return;if(!$('betaDate').value||!$('betaValue').value.trim())return toast('Add a date and beta result.');const c=cycle();c.betas.push({id:uid(),date:$('betaDate').value,value:$('betaValue').value.trim(),note:$('betaNote').value.trim()});$('betaValue').value='';$('betaNote').value='';save();renderAll();toast('Beta result added.');}
+  function renderBetas(){const c=cycle();const rows=[...c.betas].sort((a,b)=>a.date.localeCompare(b.date));$('betaTable').innerHTML=rows.map(x=>`<tr><td>${fmtDate(x.date)}</td><td><strong>${esc(x.value)}</strong></td><td>${esc(x.note||'—')}</td><td><button class="btn sm danger" data-del="betas" data-id="${x.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">No beta results yet.</td></tr>';}
+  function renderTWWSnapshot(){const c=cycle(),t=c.transfer;const test=t.testDate||c.testExpected;const items=[['Transfer date',t.date],['Test date',test],['Days until test',test?Math.max(0,daysBetween(todayISO(),test)):'—']];$('twwSnapshot').innerHTML=items.map(([k,v])=>`<div class="today-item" style="margin-bottom:8px"><strong>${esc(k)}</strong><span>${k.includes('Days')?esc(v):fmtDate(v)}</span></div>`).join('');}
+
+  function addSymptom(){if(!canAdd())return;if(!$('symName').value.trim())return toast('Add a symptom name.');const c=cycle();c.symptoms.push({id:uid(),date:$('symDate').value,name:$('symName').value.trim(),severity:$('symSeverity').value,phase:$('symPhase').value.trim(),notes:$('symNotes').value.trim()});['symName','symPhase','symNotes'].forEach(id=>$(id).value='');save();renderAll();toast('Symptom added.');}
+  function renderSymptoms(){const c=cycle();const rows=[...c.symptoms].sort((a,b)=>b.date.localeCompare(a.date));$('symTable').innerHTML=rows.map(x=>`<tr><td>${fmtDate(x.date)}</td><td><strong>${esc(x.name)}</strong></td><td><span class="pill ${x.severity==='Severe'?'danger':x.severity==='Moderate'?'warn':''}">${esc(x.severity)}</span></td><td>${esc(x.phase||'—')}</td><td>${esc(x.notes||'—')}</td><td><button class="btn sm danger" data-del="symptoms" data-id="${x.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No symptoms logged yet.</td></tr>';}
+
+  function addCost(){if(!canAdd())return;const amount=num($('costAmount').value);if(!amount)return toast('Add a cost amount.');const c=cycle();c.costs.push({id:uid(),date:$('costDate').value,category:$('costCategory').value,amount,covered:num($('costCoveredInput').value),currency:$('costCurrency').value,desc:$('costDesc').value.trim(),status:$('costStatus').value});['costAmount','costCoveredInput','costDesc'].forEach(id=>$(id).value='');save();renderAll();toast('Cost added.');}
+  function renderCosts(){const c=cycle(),cur=c.costs[0]?.currency||$('costCurrency').value||'USD';let total=0,covered=0;c.costs.filter(x=>x.currency===cur).forEach(x=>{total+=num(x.amount);covered+=num(x.covered);});const f=v=>new Intl.NumberFormat(undefined,{style:'currency',currency:cur==='Other'?'USD':cur,maximumFractionDigits:2}).format(v);$('costTotal').textContent=f(total);$('costCovered').textContent=f(covered);$('costOop').textContent=f(Math.max(0,total-covered));$('costCurrencyDisplay').textContent=cur;$('costTable').innerHTML=[...c.costs].sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.category)}</td><td>${esc(x.desc||'—')}</td><td>${esc(x.amount.toFixed(2)+' '+x.currency)}</td><td>${esc(x.covered.toFixed(2)+' '+x.currency)}</td><td><strong>${esc(Math.max(0,x.amount-x.covered).toFixed(2)+' '+x.currency)}</strong></td><td>${esc(x.status)}</td><td><button class="btn sm danger" data-del="costs" data-id="${x.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">No costs recorded yet.</td></tr>';}
+
+  function addNote(){if(!canAdd())return;if(!$('noteTitle').value.trim()&&!$('noteBody').value.trim())return toast('Add a title or note.');const c=cycle();c.notesList.push({id:uid(),date:$('noteDate').value,type:$('noteType').value,title:$('noteTitle').value.trim(),body:$('noteBody').value.trim()});$('noteTitle').value='';$('noteBody').value='';save();renderAll();toast('Note added.');}
+  function renderNotes(){const c=cycle();$('notesList').innerHTML=[...c.notesList].sort((a,b)=>b.date.localeCompare(a.date)).map(n=>`<div class="card"><div class="section-head"><div><span class="pill">${esc(n.type)}</span><h3 style="margin-top:8px">${esc(n.title||'Untitled note')}</h3><p>${fmtDate(n.date)}</p></div><button class="btn sm danger" data-del="notesList" data-id="${n.id}">Delete</button></div><div style="font-size:12px;line-height:1.6;white-space:pre-wrap">${esc(n.body||'')}</div></div>`).join('')||'<div class="card empty">No notes yet.</div>';}
+
+  function deleteRecord(type,id){const c=cycle();if(!Array.isArray(c[type]))return;c[type]=c[type].filter(x=>x.id!==id);save();renderAll();toast('Entry deleted.');}
+  function newCycle(){if(!full&&state.cycles.length>=1){toast('Demo mode includes one cycle. Unlock the full version for multiple cycles.');openActivation();return;}const c=blankCycle(`IVF Cycle ${state.cycles.length+1}`);state.cycles.push(c);state.activeCycleId=c.id;save();renderAll();showPage('cycle');toast('New cycle created.');}
+  function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${name}`));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));window.scrollTo({top:0,behavior:'smooth'});}
+  function exportBackup(){const blob=new Blob([JSON.stringify({app:'IVF Treatment Tracker',exportedAt:new Date().toISOString(),state},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`IVF-Tracker-Backup-${todayISO()}.json`;a.click();URL.revokeObjectURL(a.href);toast('Backup exported.');}
+  async function restoreBackup(){const f=$('restoreFile').files[0];if(!f)return toast('Choose a JSON backup file.');try{const parsed=JSON.parse(await f.text());const incoming=parsed.state||parsed;if(!incoming.cycles?.length)throw new Error('invalid');if(!confirm('Restore this backup and replace current local tracker data?'))return;state=incoming;save();renderAll();toast('Backup restored.');}catch{toast('That file does not look like a valid tracker backup.');}}
+  function clearData(){if(!confirm('Clear all locally saved IVF tracker data on this browser? This cannot be undone unless you have a backup.'))return;state=defaultState();save();renderAll();toast('Local data cleared.');}
+  function activate(){const code=$('activationCode').value.trim().toUpperCase();if(code===ACTIVATION_CODE){full=true;localStorage.setItem(LICENSE_KEY,'1');$('activateModal').classList.add('hidden');$('activationCode').value='';renderAll();toast('Full version unlocked.');}else toast('Activation code not recognized.');}
+
+  $('nav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)showPage(b.dataset.page);});
+  document.addEventListener('click',e=>{const go=e.target.closest('[data-go]');if(go)showPage(go.dataset.go);const del=e.target.closest('[data-del]');if(del&&confirm('Delete this entry?'))deleteRecord(del.dataset.del,del.dataset.id);});
+  $('activeCycleSelect').addEventListener('change',e=>{state.activeCycleId=e.target.value;save();renderAll();});
+  $('newCycleBtn').onclick=newCycle;$('saveCycleBtn').onclick=saveCycleForm;$('addMedBtn').onclick=addMed;$('addApptBtn').onclick=addAppt;$('addMonBtn').onclick=addMonitoring;$('saveLabBtn').onclick=saveLab;$('addEmbBtn').onclick=addEmbryo;$('saveTransferBtn').onclick=saveTransfer;$('addBetaBtn').onclick=addBeta;$('addSymBtn').onclick=addSymptom;$('addCostBtn').onclick=addCost;$('addNoteBtn').onclick=addNote;$('exportBtn').onclick=exportBackup;$('restoreBtn').onclick=restoreBackup;$('clearDataBtn').onclick=clearData;
+  $('openActivate').onclick=()=>{if(!full)openActivation();};$('closeActivate').onclick=()=>$('activateModal').classList.add('hidden');$('activateBtn').onclick=activate;$('activationCode').addEventListener('keydown',e=>{if(e.key==='Enter')activate();});$('activateModal').addEventListener('click',e=>{if(e.target===$('activateModal'))$('activateModal').classList.add('hidden');});
+  renderAll();
+})();
+</script>
+<dialog id="installHelp" aria-labelledby="installHelpTitle">
+  <h2 id="installHelpTitle">Install IVF Tracker</h2>
+  <p>Open the hosted HTTPS link online first. A downloaded HTML file cannot be installed as an offline app.</p>
+  <h3>Android · Chrome</h3>
+  <ol><li>Open the tracker link in Chrome.</li><li>Tap <strong>Install App</strong> and confirm. If no prompt appears, use Chrome’s menu → <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li><li>Launch IVF Tracker from its Home Screen icon.</li></ol>
+  <h3>iPhone · Safari</h3>
+  <ol><li>Open the tracker link in Safari.</li><li>Tap <strong>Share</strong> (inside More if needed) → <strong>Add to Home Screen</strong>. If missing, look under Edit Actions.</li><li>Enable <strong>Open as Web App</strong> if shown, then tap <strong>Add</strong>.</li><li>Launch from the Home Screen icon to open without the browser toolbar.</li></ol>
+  <h3>Offline and updates</h3>
+  <p>Wait for <strong>Offline ready</strong> before disconnecting. Saved entries, tracking and local backup tools work offline. Updates need internet. Save entries and close all tracker windows when an update is ready; reopening loads the new release.</p>
+  <p>Data belongs to this browser/app and device. Before moving from the downloaded file, another browser or another address, export JSON from <strong>Backup</strong> and restore it in the installed app. Keep regular backups: clearing website data removes local records.</p>
+  <button class="btn primary" id="closeInstallHelp" type="button" autofocus>Close</button>
+</dialog>
+</body>
+</html>
